@@ -9,6 +9,9 @@ import site.lawmate.admin.visitor.repository.VisitorRepository;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.IntStream;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +43,41 @@ public class VisitorService {
     public Flux<String> getVisitorCountStream() {
         return visitorCountSink.asFlux();
     }
+
+    public Mono<Map<String,Long>> getVisitorCountByLast7Days() {
+        Map<String,Long> dayMap = new HashMap<>();
+        return Flux.range(0, 7)
+                .map(i -> LocalDate.now().minusDays(i))
+                .flatMapSequential(date -> {
+                    String dateKey = "visitorCount:" + date;
+                    return visitorRepository.getVisitorCount(dateKey)
+                            .map(count -> {
+                                dayMap.put(date.toString(), Long.parseLong(count));
+                                return dayMap;
+                            });
+                })
+                .then(Mono.just(dayMap));
+    }
+
+
+    public Mono<Long> getVisitorCountByMonth(String year, String month) {
+        return visitorRepository.getVisitorCountByMonth(year, month);
+    }
+
+    public Mono<Map<String,Long>> getVisitorCountYearByMonth(String year) {
+        Map<String,Long> monthMap = new HashMap<>();
+        return Flux.range(1, 12)
+                .flatMapSequential(month -> { //flatMapSequential()은 Flux 가 방출하는 값에 대해 순차적으로 Mono 를 생성
+                    String monthKey = String.format("%02d", month);
+                    return visitorRepository.getVisitorCountByMonth(year, monthKey)
+                            .map(count -> {
+                                monthMap.put(monthKey, count);
+                                return monthMap;
+                            });
+                })
+                .then(Mono.just(monthMap));
+    }
+
 
     private String getCurrentDateKey() {
         LocalDate today = LocalDate.now();

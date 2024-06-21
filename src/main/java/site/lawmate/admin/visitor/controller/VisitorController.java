@@ -3,29 +3,45 @@ package site.lawmate.admin.visitor.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import site.lawmate.admin.visitor.service.VisitorService;
 
+import java.util.Map;
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/visit")
 public class VisitorController {
 
     private final VisitorService visitorService;
 
-    @PostMapping("/visit")
-    public Mono<Long> visit() {
-        return visitorService.incrementVisitorCount();
+    @PostMapping("/visit") //
+    public ResponseEntity<Mono<Long>> visit() {
+        return ResponseEntity.ok(visitorService.incrementVisitorCount());
     }
 
     @GetMapping(value = "/visitors", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<String> getVisitorCountStream() {
-        return visitorService.getVisitorCountStream();
+    public ResponseEntity<Flux<String>> getVisitorCountStream() {
+        return ResponseEntity.ok(visitorService.getVisitorCountStream());
     }
+
+    @GetMapping("/month")
+    public ResponseEntity<Mono<Long>> getVisitorCountByMonth(@RequestParam("year") String year,@RequestParam("month") String month) {
+        return ResponseEntity.ok(visitorService.getVisitorCountByMonth(year, month));
+    }
+
+    @GetMapping("/year")
+    public ResponseEntity<Mono<Map<String, Long>>> getVisitorCountYearByMonth(@RequestParam("year") String year) {
+        return ResponseEntity.ok(visitorService.getVisitorCountYearByMonth(year));
+    }
+
+    @GetMapping("/last7days")
+    public ResponseEntity<Mono<Map<String, Long>>> getVisitorCountByLast7Days() {
+        return ResponseEntity.ok(visitorService.getVisitorCountByLast7Days());
+    }
+
 }
