@@ -19,7 +19,7 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public Mono<Admin> save(AdminDto adminDto) {
 
-        return adminRepository.save(new Admin(adminDto.getId(), adminDto.getUsername(), adminDto.getPassword(), adminDto.getRole()));
+        return adminRepository.save(new Admin(adminDto.getId(), adminDto.getUsername(), adminDto.getPassword(), adminDto.getRole(), adminDto.getEnabled()));
     }
 
 
@@ -36,7 +36,12 @@ public class AdminServiceImpl implements AdminService{
     @Override
     public Mono<Admin> update(AdminDto adminDto) {
         return adminRepository.findById(adminDto.getId())
-                .map(admin -> adminDtoToEntity(adminDto))
+                .map(admin -> {
+                    admin.setUsername(adminDto.getUsername());
+                    admin.setPassword(adminDto.getPassword());
+                    admin.setRole(adminDto.getRole());
+                    return admin;
+                })
                 .flatMap(adminRepository::save);
     }
 
@@ -44,10 +49,28 @@ public class AdminServiceImpl implements AdminService{
     public Mono<Void> delete(String id) {
         return adminRepository.deleteById(id);
     }
-    public static Admin adminDtoToEntity(AdminDto adminDto) {
-        Admin admin = new Admin();
-        BeanUtils.copyProperties(adminDto, admin);
-        log.info("admin: {}", admin.getUsername()+ " " + admin.getPassword());
-        return admin;
+
+    @Override
+    public Mono<String> permit(String id) {
+        return adminRepository.findById(id)
+                .map(admin -> {
+                    admin.setEnabled(true);
+                    return admin;
+                })
+                .flatMap(adminRepository::save)
+                .flatMap(admin -> Mono.just("Permit Success"))
+                .switchIfEmpty(Mono.just("Permit Failure"));
+    }
+
+    @Override
+    public Mono<String> revoke(String id) {
+        return adminRepository.findById(id)
+                .map(admin -> {
+                    admin.setEnabled(false);
+                    return admin;
+                })
+                .flatMap(adminRepository::save)
+                .flatMap(admin -> Mono.just("Revoke Success"))
+                .switchIfEmpty(Mono.just("Revoke Failure"));
     }
 }

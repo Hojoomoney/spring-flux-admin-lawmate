@@ -11,4 +11,8 @@ public interface AdminService {
     Flux<Admin> findAll();
     Mono<Admin> update(AdminDto adminDto);
     Mono<Void> delete(String id);
+
+    Mono<String> permit(String id);
+
+    Mono<String> revoke(String id);
 }

@@ -36,7 +36,18 @@ public class AdminController {
         return ResponseEntity.ok(adminService.update(adminDto));
     }
     @DeleteMapping("/{id}")
-    public ResponseEntity<Mono<Void>> delete(@PathVariable String id) {
+    public ResponseEntity<Mono<Void>> delete(@PathVariable("id") String id) {
         return ResponseEntity.ok(adminService.delete(id));
     }
+
+    @PutMapping("/permit/{id}")
+    public ResponseEntity<Mono<String>> permit(@PathVariable("id") String id) {
+        return ResponseEntity.ok(adminService.permit(id));
+    }
+
+    @PutMapping("/revoke/{id}")
+    public ResponseEntity<Mono<String>> revoke(@PathVariable("id") String id) {
+        return ResponseEntity.ok(adminService.revoke(id));
+    }
+
 }
