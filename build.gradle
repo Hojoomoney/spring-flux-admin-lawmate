@@ -35,6 +35,10 @@ dependencies {
 
 	//redis
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis-reactive'
+
+	//smtp
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
+	implementation 'io.projectreactor:reactor-core'
 }
 
 tasks.named('test') {
