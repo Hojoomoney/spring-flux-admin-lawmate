@@ -2,8 +2,8 @@ package site.lawmate.admin.service;
 
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import site.lawmate.admin.model.Admin;
-import site.lawmate.admin.model.AdminDto;
+import site.lawmate.admin.domain.model.Admin;
+import site.lawmate.admin.domain.dto.AdminDto;
 
 public interface AdminService {
     Mono<Admin> save(AdminDto adminDto);

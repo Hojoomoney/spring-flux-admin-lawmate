@@ -1,4 +1,4 @@
-package site.lawmate.admin.model;
+package site.lawmate.admin.domain.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

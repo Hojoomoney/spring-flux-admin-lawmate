@@ -1,4 +1,4 @@
-package site.lawmate.admin.model;
+package site.lawmate.admin.domain.model;
 
 import lombok.*;
 import lombok.experimental.FieldDefaults;
