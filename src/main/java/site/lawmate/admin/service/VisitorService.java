@@ -44,6 +44,7 @@ public class VisitorService {
     }
 
     public Mono<Map<String,Long>> getVisitorCountByLast7Days() {
+        // 방문자 수를 저장할 Map 객체 생성
         Map<String,Long> dayMap = new HashMap<>();
         return Flux.range(0, 7)
                 .map(i -> LocalDate.now().minusDays(i))

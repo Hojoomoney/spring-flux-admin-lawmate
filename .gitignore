@@ -40,4 +40,4 @@ out/
 Dockerfile
 docker-compose.yml
 
-data
+/data
