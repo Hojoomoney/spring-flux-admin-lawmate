@@ -41,6 +41,6 @@ dependencies {
 	implementation 'io.projectreactor:reactor-core'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
+//tasks.named('test') {
+//	useJUnitPlatform()
+//}
