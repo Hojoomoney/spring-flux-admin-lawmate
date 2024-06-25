@@ -19,7 +19,6 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Mono<Admin> save(AdminDto adminDto) {
-
         return adminRepository.save(new Admin(adminDto.getId(), adminDto.getUsername(), adminDto.getPassword(), adminDto.getRole(), adminDto.getEnabled()));
     }
 

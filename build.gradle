@@ -39,6 +39,10 @@ dependencies {
 	//smtp
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 	implementation 'io.projectreactor:reactor-core'
+
+	implementation(project(':user-service')){
+		transitive = false
+	}
 }
 
 //tasks.named('test') {
