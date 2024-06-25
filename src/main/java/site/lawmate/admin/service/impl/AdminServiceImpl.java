@@ -16,6 +16,7 @@ import site.lawmate.admin.service.AdminService;
 public class AdminServiceImpl implements AdminService {
 
     private final AdminRepository adminRepository;
+
     @Override
     public Mono<Admin> save(AdminDto adminDto) {
 
