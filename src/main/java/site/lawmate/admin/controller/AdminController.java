@@ -11,7 +11,6 @@ import site.lawmate.admin.domain.dto.AdminDto;
 import site.lawmate.admin.service.AdminService;
 
 @RestController
-@RequestMapping("/api/admin")
 @Slf4j
 @RequiredArgsConstructor
 public class AdminController {

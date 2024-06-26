@@ -14,12 +14,12 @@ import java.util.Map;
 @RestController
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/api/visit")
+@RequestMapping("/visit")
 public class VisitorController {
 
     private final VisitorService visitorService;
 
-    @PostMapping("/visit") //
+    @PostMapping("/") //
     public ResponseEntity<Mono<Long>> visit() {
         return ResponseEntity.ok(visitorService.incrementVisitorCount());
     }
