@@ -19,7 +19,13 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Mono<Admin> save(AdminDto adminDto) {
-        return adminRepository.save(new Admin(adminDto.getId(), adminDto.getUsername(), adminDto.getPassword(), adminDto.getRole(), adminDto.getEnabled()));
+        return adminRepository.save(Admin.builder()
+                .username(adminDto.getUsername())
+                .email(adminDto.getEmail())
+                .password(adminDto.getPassword())
+                .role(adminDto.getRole())
+                .enabled(adminDto.getEnabled())
+                .build());
     }
 
 
@@ -72,5 +78,10 @@ public class AdminServiceImpl implements AdminService {
                 .flatMap(adminRepository::save)
                 .flatMap(admin -> Mono.just("Revoke Success"))
                 .switchIfEmpty(Mono.just("Revoke Failure"));
+    }
+
+    @Override
+    public Flux<Admin> findAllByEnabled() {
+        return adminRepository.findAll().filter(admin -> !admin.getEnabled());
     }
 }

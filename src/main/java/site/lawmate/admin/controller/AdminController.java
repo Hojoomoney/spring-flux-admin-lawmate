@@ -49,4 +49,9 @@ public class AdminController {
         return ResponseEntity.ok(adminService.revoke(id));
     }
 
+    @GetMapping("/enabled")
+    public ResponseEntity<Flux<Admin>> findAllByEnabled() {
+        return ResponseEntity.ok(adminService.findAllByEnabled());
+    }
+
 }

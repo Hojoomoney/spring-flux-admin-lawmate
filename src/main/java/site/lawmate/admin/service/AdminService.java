@@ -13,6 +13,6 @@ public interface AdminService {
     Mono<Void> delete(String id);
 
     Mono<String> permit(String id);
-
     Mono<String> revoke(String id);
+    Flux<Admin> findAllByEnabled();
 }
