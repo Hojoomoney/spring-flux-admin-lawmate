@@ -19,7 +19,7 @@ public class VisitorController {
 
     private final VisitorService visitorService;
 
-    @PostMapping("/") //
+    @PostMapping("/save") //
     public ResponseEntity<Mono<Long>> visit() {
         return ResponseEntity.ok(visitorService.incrementVisitorCount());
     }

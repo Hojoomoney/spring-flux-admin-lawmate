@@ -21,7 +21,7 @@ public class ManageController {
 
     private final ManageService manageService;
 
-    @GetMapping("/countAll")
+    @GetMapping("/total")
     public Mono<LawyerStatsDto> countLawyers() {
         return manageService.countLawyersAll();
     }
@@ -37,5 +37,8 @@ public class ManageController {
         manageService.saveLawyerStats();
     }
 
-
+    @GetMapping("/all")
+    public Flux<LawyerStatsDto> getLawyerStats(){
+        return manageService.getLawyerStats();
+    }
 }

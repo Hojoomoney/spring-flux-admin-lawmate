@@ -74,5 +74,15 @@ public class ManageServiceImpl implements ManageService {
         lawyerStatsRepository.save(lawyerStats).subscribe();
     }
 
+    @Override
+    public Flux<LawyerStatsDto> getLawyerStats() {
+        return lawyerStatsRepository.findAll().map(lawyerStats -> LawyerStatsDto.builder()
+                .date(lawyerStats.getDate())
+                .newLawyerCount(lawyerStats.getNewLawyerCount())
+                .increaseRate(lawyerStats.getIncreaseRate())
+                .totalLawyersAuthFalse(lawyerStats.getCountLawyersFalse())
+                .build());
+    }
+
 
 }

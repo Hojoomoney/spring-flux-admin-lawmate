@@ -18,4 +18,6 @@ public interface ManageService {
     Mono<Long> getIncreaseRate();
 
     void saveLawyerStats();
+
+    Flux<LawyerStatsDto> getLawyerStats();
 }
