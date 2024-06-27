@@ -30,9 +30,9 @@ public class AdminController {
     public ResponseEntity<Flux<Admin>> findAll() {
         return ResponseEntity.ok(adminService.findAll());
     }
-    @PutMapping("/update")
-    public ResponseEntity<Mono<Admin>> update(@RequestBody AdminDto adminDto) {
-        return ResponseEntity.ok(adminService.update(adminDto));
+    @PutMapping("/{id}")
+    public ResponseEntity<Mono<Admin>> update(@PathVariable String id, @RequestBody AdminDto adminDto) {
+        return ResponseEntity.ok(adminService.update(id,adminDto));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<Mono<Void>> delete(@PathVariable("id") String id) {
@@ -52,6 +52,16 @@ public class AdminController {
     @GetMapping("/enabled")
     public ResponseEntity<Flux<Admin>> findAllByEnabled() {
         return ResponseEntity.ok(adminService.findAllByEnabled());
+    }
+
+    @GetMapping("/countEnabled")
+    public ResponseEntity<Mono<Long>> countAdminsEnabledFalse() {
+        return ResponseEntity.ok(adminService.countAdminsEnabledFalse());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Flux<AdminDto>> searchByName(@RequestParam String keyword) {
+        return ResponseEntity.ok(adminService.searchByName(keyword));
     }
 
 }

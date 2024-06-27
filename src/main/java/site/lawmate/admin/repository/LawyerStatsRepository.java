@@ -2,9 +2,8 @@ package site.lawmate.admin.repository;
 
 import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
-import site.lawmate.admin.domain.model.Admin;
+import site.lawmate.admin.domain.model.LawyerStats;
 
 @Repository
-public interface AdminRepository extends ReactiveMongoRepository<Admin, String> {
+public interface LawyerStatsRepository extends ReactiveMongoRepository<LawyerStats, String> {
 }
