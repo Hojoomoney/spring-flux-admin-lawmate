@@ -50,14 +50,9 @@ public class BoardController {
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/download")
-    public Mono<ResponseEntity<ByteArrayResource>> downloadFile(@RequestBody File file) {
-        ByteArrayResource resource = new ByteArrayResource(file.getFileData());
-        return  Mono.just(ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
-                .contentType(MediaType.parseMediaType(file.getFileType()))
-                .body(resource))
-                .defaultIfEmpty(ResponseEntity.notFound().build());
+    @GetMapping("/download")
+    public Mono<ResponseEntity<ByteArrayResource>> downloadFile(@RequestParam("id") String id, @RequestParam("fileName") String fileName) {
+        return boardService.downloadFile(id, fileName);
     }
 
 

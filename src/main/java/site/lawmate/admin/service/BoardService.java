@@ -64,6 +64,22 @@ public class BoardService {
         return boardRepository.findById(id);
     }
 
+    public Mono<ResponseEntity<ByteArrayResource>> downloadFile(String id, String fileName) {
+        return boardRepository.findById(id)
+                .map(board -> {
+                    File file = board.getFiles().stream()
+                            .filter(f -> f.getFileName().equals(fileName))
+                            .findFirst()
+                            .orElseThrow(() -> new IllegalArgumentException("File not found"));
+                    ByteArrayResource resource = new ByteArrayResource(file.getFileData());
+                    return ResponseEntity.ok()
+                            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
+                            .contentType(MediaType.parseMediaType(file.getFileType()))
+                            .body(resource);
+                })
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
 
     private byte[] toByteArray(DataBuffer dataBuffer) {
         byte[] bytes = new byte[dataBuffer.readableByteCount()];
