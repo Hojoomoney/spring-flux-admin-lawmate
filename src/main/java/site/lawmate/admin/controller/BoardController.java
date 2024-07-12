@@ -1,12 +1,9 @@
 package site.lawmate.admin.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +11,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import site.lawmate.admin.domain.dto.BoardDto;
 import site.lawmate.admin.domain.model.Board;
-import site.lawmate.admin.domain.model.File;
 import site.lawmate.admin.service.BoardService;
 
 import java.io.IOException;

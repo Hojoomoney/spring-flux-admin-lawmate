@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-import site.lawmate.admin.domain.model.File;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,7 +21,7 @@ public class BoardDto {
     private String content;
     private String writer;
     private Long viewCount;
-    private List<File> files;
+    private List<FileDto> fileDtos;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 }

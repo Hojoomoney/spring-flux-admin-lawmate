@@ -5,6 +5,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
+import site.lawmate.admin.domain.dto.FileDto;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +24,7 @@ public class Board {
         private String content;
         private String writer;
         private Long viewCount;
-        private List<File> files;
+        private List<FileDto> fileDtos;
 
         @CreatedDate
         private LocalDateTime createdDate;

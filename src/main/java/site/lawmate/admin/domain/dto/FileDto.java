@@ -1,15 +1,14 @@
-package site.lawmate.admin.domain.model;
+package site.lawmate.admin.domain.dto;
 
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.stereotype.Component;
 
-@Document
 @Builder
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class File {
+@Component
+public class FileDto {
 
     private String fileName;
     private byte[] fileData;

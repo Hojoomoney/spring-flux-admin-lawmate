@@ -10,16 +10,13 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import site.lawmate.admin.domain.dto.BoardDto;
-import site.lawmate.admin.domain.model.File;
+import site.lawmate.admin.domain.dto.FileDto;
 import site.lawmate.admin.domain.model.Board;
 import site.lawmate.admin.repository.BoardRepository;
 
-import java.util.List;
 import java.util.Objects;
 
 @Slf4j
@@ -45,7 +42,7 @@ public class BoardService {
                 .flatMap(filePart -> filePart.content()
                         .map(this::toByteArray)
                         .reduce(this::concatArrays)
-                        .map(bytes -> File.builder()
+                        .map(bytes -> FileDto.builder()
                                 .fileName(filePart.filename())
                                 .fileData(bytes)
                                 .fileType(Objects.requireNonNull(filePart.headers().getContentType()).toString())
@@ -56,7 +53,7 @@ public class BoardService {
                                 .title(boardDto.getTitle())
                                 .writer(boardDto.getWriter())
                                 .content(boardDto.getContent())
-                                .files(files) // List<File>로 저장
+                                .fileDtos(files) // List<File>로 저장
                                 .build()));
     }
 
@@ -67,14 +64,14 @@ public class BoardService {
     public Mono<ResponseEntity<ByteArrayResource>> downloadFile(String id, String fileName) {
         return boardRepository.findById(id)
                 .map(board -> {
-                    File file = board.getFiles().stream()
+                    FileDto fileDto = board.getFileDtos().stream()
                             .filter(f -> f.getFileName().equals(fileName))
                             .findFirst()
                             .orElseThrow(() -> new IllegalArgumentException("File not found"));
-                    ByteArrayResource resource = new ByteArrayResource(file.getFileData());
+                    ByteArrayResource resource = new ByteArrayResource(fileDto.getFileData());
                     return ResponseEntity.ok()
-                            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFileName() + "\"")
-                            .contentType(MediaType.parseMediaType(file.getFileType()))
+                            .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileDto.getFileName() + "\"")
+                            .contentType(MediaType.parseMediaType(fileDto.getFileType()))
                             .body(resource);
                 })
                 .defaultIfEmpty(ResponseEntity.notFound().build());
