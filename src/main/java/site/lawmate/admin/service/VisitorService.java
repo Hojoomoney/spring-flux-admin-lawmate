@@ -34,9 +34,10 @@ public class VisitorService {
         // tryEmitNext()는 Sinks.Many 에 값을 방출
     }
 
-    public Mono<String> getVisitorCount() {
+    public Mono<String> getVisitorCountToday() {
         String key = getCurrentDateKey();
-        return visitorRepository.getVisitorCount(key);
+        return visitorRepository.getVisitorCount(key)
+                .defaultIfEmpty("0");
     }
 
     public Flux<String> getVisitorCountStream() {

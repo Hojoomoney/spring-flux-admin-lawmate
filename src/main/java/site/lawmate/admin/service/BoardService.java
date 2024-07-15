@@ -53,7 +53,7 @@ public class BoardService {
                                 .title(boardDto.getTitle())
                                 .writer(boardDto.getWriter())
                                 .content(boardDto.getContent())
-                                .fileDtos(files) // List<File>로 저장
+                                .files(files) // List<File>로 저장
                                 .build()));
     }
 
@@ -64,7 +64,7 @@ public class BoardService {
     public Mono<ResponseEntity<ByteArrayResource>> downloadFile(String id, String fileName) {
         return boardRepository.findById(id)
                 .map(board -> {
-                    FileDto fileDto = board.getFileDtos().stream()
+                    FileDto fileDto = board.getFiles().stream()
                             .filter(f -> f.getFileName().equals(fileName))
                             .findFirst()
                             .orElseThrow(() -> new IllegalArgumentException("File not found"));
@@ -75,6 +75,42 @@ public class BoardService {
                             .body(resource);
                 })
                 .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    public Mono<Board> update(String id, BoardDto boardDto, Flux<FilePart> fileParts) {
+        return boardRepository.findById(id)
+                .flatMap(board -> fileParts
+                        .flatMap(filePart -> filePart.content()
+                                .map(this::toByteArray)
+                                .reduce(this::concatArrays)
+                                .map(bytes -> FileDto.builder()
+                                        .fileName(filePart.filename())
+                                        .fileData(bytes)
+                                        .fileType(Objects.requireNonNull(filePart.headers().getContentType()).toString())
+                                        .build()))
+                        .collectList()
+                        .map(files -> {
+                            board.setTitle(boardDto.getTitle());
+                            board.setWriter(boardDto.getWriter());
+                            board.setContent(boardDto.getContent());
+                            board.setFiles(files);
+                            return board;
+                        })
+                        .flatMap(boardRepository::save));
+    }
+
+    public Mono<Void> delete(String id) {
+        return boardRepository.deleteById(id);
+    }
+
+    public Mono<Void> deleteFile(String id, String fileName) {
+        return boardRepository.findById(id)
+                .map(board -> {
+                    board.getFiles().removeIf(f -> f.getFileName().equals(fileName));
+                    return board;
+                })
+                .flatMap(boardRepository::save)
+                .then();
     }
 
 

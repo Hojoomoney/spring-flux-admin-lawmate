@@ -20,4 +20,6 @@ public interface ManageService {
     void saveLawyerStats();
 
     Flux<LawyerStatsDto> getLawyerStats();
+
+    Flux<LawyerStatsDto> getLawyerStatsByMonth();
 }

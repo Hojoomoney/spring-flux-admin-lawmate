@@ -23,4 +23,7 @@ public class LawyerStatsDto {
     private Long newLawyerCount; // 신규 가입자 수
     private Long increaseRate; // 증가율
 
+    private int month; // 월 (월별 통게용)
+    private int year; // 년 (월별 통계용)
+
 }

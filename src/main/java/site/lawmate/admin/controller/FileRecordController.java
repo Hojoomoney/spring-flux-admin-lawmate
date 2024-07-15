@@ -22,21 +22,26 @@ import java.nio.file.Paths;
 @RequiredArgsConstructor
 public class FileRecordController {
 
-
     private final FileRecordService fileRecordService;
     @PostMapping("/upload-files")
-    public Mono uploadFiles(@RequestPart("files") Flux<FilePart> filePartFlux){
+    public ResponseEntity<Mono<FileRecord>> uploadFiles(@RequestPart("files") Flux<FilePart> filePartFlux){
         FileRecord fileRecord = new FileRecord();
 
-        return filePartFlux.flatMap(filePart ->
-            filePart.transferTo(Paths.get("admin-service/src/main/resources/uploads/" + filePart.filename()))
+        return ResponseEntity.ok(filePartFlux.flatMap(filePart ->
+            filePart.transferTo(Paths.get("admin-service/src/main/resources/uploads" + filePart.filename()))
                     .then(Mono.just(filePart.filename())))
                     .collectList()
                 .flatMap(fileNames -> {
                     fileRecord.setFileNames(fileNames);
                     return fileRecordService.save(fileRecord);
                 })
-                .onErrorResume(Mono::error);
+                .onErrorResume(Mono::error));
+    }
+
+    @PostMapping("/save")
+    public Mono<String> uploadFile(@RequestPart("file") FilePart filePart) {
+        log.info("uploadFile {}", filePart.filename());
+        return fileRecordService.uploadFile(filePart);
     }
 
     @GetMapping("/files/{filename}")

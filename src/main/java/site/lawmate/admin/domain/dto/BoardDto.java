@@ -21,7 +21,7 @@ public class BoardDto {
     private String content;
     private String writer;
     private Long viewCount;
-    private List<FileDto> fileDtos;
+    private List<FileDto> files;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
 }

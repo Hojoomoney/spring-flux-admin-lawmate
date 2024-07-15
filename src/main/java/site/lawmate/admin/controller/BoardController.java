@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import site.lawmate.admin.domain.dto.BoardDto;
+import site.lawmate.admin.domain.dto.Message;
 import site.lawmate.admin.domain.model.Board;
 import site.lawmate.admin.service.BoardService;
 
@@ -34,6 +35,10 @@ public class BoardController {
     public Mono<ResponseEntity<Board>> save(@RequestPart("boardDto") String boardDtoString,
                                             @RequestPart("files") Flux<FilePart> fileParts) {
         BoardDto boardDto = convertJsonToBoardDto(boardDtoString);
+        log.info("boardDto: {}", boardDto.getTitle());
+        log.info("boardDto: {}", boardDto.getWriter());
+        log.info("boardDto: {}", boardDto.getContent());
+        log.info("fileParts: {}", fileParts);
         return boardService.save(boardDto, fileParts)
                 .map(ResponseEntity::ok)
                 .defaultIfEmpty(ResponseEntity.badRequest().build());
@@ -51,6 +56,33 @@ public class BoardController {
         return boardService.downloadFile(id, fileName);
     }
 
+    @DeleteMapping("/{id}")
+    public Mono<ResponseEntity<Message>> deleteById(@PathVariable("id") String id) {
+        return boardService.delete(id)
+                .then(Mono.just(ResponseEntity.ok(Message.builder()
+                        .message("Successfully deleted")
+                        .build())))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+
+    }
+
+    @PutMapping("/{id}")
+    public Mono<ResponseEntity<Board>> update(@PathVariable("id") String id, @RequestPart("boardDto") String boardDtoString,
+                                              @RequestPart("files") Flux<FilePart> fileParts) {
+        BoardDto boardDto = convertJsonToBoardDto(boardDtoString);
+        return boardService.update(id, boardDto, fileParts)
+                .map(ResponseEntity::ok)
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/deleteFile")
+    public Mono<ResponseEntity<Message>> deleteFile(@RequestParam("id") String id, @RequestParam("fileName") String fileName) {
+        return boardService.deleteFile(id, fileName)
+                .then(Mono.just(ResponseEntity.ok(Message.builder()
+                        .message("Successfully deleted")
+                        .build())))
+                .defaultIfEmpty(ResponseEntity.notFound().build());
+    }
 
 
     private BoardDto convertJsonToBoardDto(String boardDtoString) {

@@ -44,4 +44,8 @@ public class VisitorController {
         return ResponseEntity.ok(visitorService.getVisitorCountByLast7Days());
     }
 
+    @GetMapping("/today")
+    public ResponseEntity<Mono<String>> getVisitorCount() {
+        return ResponseEntity.ok(visitorService.getVisitorCountToday());
+    }
 }
