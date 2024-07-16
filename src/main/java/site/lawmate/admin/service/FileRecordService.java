@@ -54,15 +54,15 @@ public class FileRecordService {
 
         // upload local file
         String objectName = filePart.filename();
-        String filePath= "/" + folderName + objectName;
+        String filePath= root + "/" + objectName;
 
         try {
-            s3Client.putObject(bucketName, objectName, new File(filePath));
+            s3Client.putObject(bucketName + "/admin", objectName, new File(filePath));
             System.out.format("Object %s has been created.\n", objectName);
         } catch(SdkClientException e) {
             e.printStackTrace();
         }
-        return filePart.transferTo(Paths.get(root + filePart.filename()))
+        return filePart.transferTo(Paths.get(root +"/"+ filePart.filename()))
                 .then(Mono.just(filePart.filename()));
     }
 

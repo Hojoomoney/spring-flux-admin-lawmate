@@ -58,28 +58,17 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Mono<String> permit(String id) {
+    public Mono<String> enabled(String id) {
         return adminRepository.findById(id)
                 .map(admin -> {
-                    admin.setEnabled(true);
+                    admin.setEnabled(!admin.getEnabled());
                     return admin;
                 })
                 .flatMap(adminRepository::save)
-                .flatMap(admin -> Mono.just("Permit Success"))
-                .switchIfEmpty(Mono.just("Permit Failure"));
+                .flatMap(admin -> Mono.just("Permit|Revoke Success"))
+                .switchIfEmpty(Mono.just("Permit|Revoke Failure"));
     }
 
-    @Override
-    public Mono<String> revoke(String id) {
-        return adminRepository.findById(id)
-                .map(admin -> {
-                    admin.setEnabled(false);
-                    return admin;
-                })
-                .flatMap(adminRepository::save)
-                .flatMap(admin -> Mono.just("Revoke Success"))
-                .switchIfEmpty(Mono.just("Revoke Failure"));
-    }
 
     @Override
     public Flux<Admin> findAllByEnabled() {
